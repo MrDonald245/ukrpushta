@@ -351,11 +351,6 @@
         {foreach $deliveries as $d}
         <option value="{$d->id}" {if $d->id==$delivery->id}selected{/if}>{$d->name}</option>
         {/foreach}
-        {*ukrposhta*}
-        {if $settings->ukrposhta_token && $settings->ukrposhta_bearer}
-        <option value="777777" {if 777777 == $delivery_id}selected{/if}>Укрпочта</option>
-        {/if}
-        {*ukrposhta*}
       </select>
       <input type=text name=delivery_price value='{$order->delivery_price}'> <span
         class=currency>{$currency->sign}</span>
@@ -367,7 +362,7 @@
       {* ukrposhta *}
       {if $settings->ukrposhta_token && $settings->ukrposhta_bearer}
       <div class="ukr_post">
-        {if 777777 == $delivery_id}
+        {if $delivery_id == 777}
         <div class="block layer ukr_post" id="test_place_for_dpf">
 
           <script src="/design/{$settings->theme|escape}/js/ukr_post_api.js"></script>

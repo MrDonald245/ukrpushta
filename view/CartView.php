@@ -93,7 +93,7 @@ class CartView extends View
 	    	$_SESSION['order_id'] = $order_id;
 
             /* ukrposhta */
-            if ($dev_id == 777777) {
+            if ($dev_id == 777) {
                 $ukrposhta                     = new stdClass();
                 $ukrposhta->recipient_postcode = $this->request->post('ukrposhta_recipient_postcode');
                 $ukrposhta->order_id           = $order_id;

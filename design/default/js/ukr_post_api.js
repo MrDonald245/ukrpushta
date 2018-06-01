@@ -1,6 +1,6 @@
 $(function () {
     $('[name=delivery_id]').change(function () {
-        if ($(this).val() === "777777") {
+        if ($(this).val() === "777") {
             $('#block_ukr_post').show(300);
         } else {
             $('#block_ukr_post').hide(300);
