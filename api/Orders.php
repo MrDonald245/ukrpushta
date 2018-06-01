@@ -26,11 +26,12 @@ class Orders extends Simpla
 										o.date, o.user_id, o.name, o.address, o.phone, o.email, o.comment, o.status,
 										o.url, o.total_price, o.note, o.ip,
 										/* ukrposhta */
-                                          u.recipient_postcode, u.recipient_inn,
-                                          u.recipient_bank_code, u.recipient_bank_account,
-                                          u.parcel_weight, u.parcel_length,
-                                          u.paid_by, u.payment_type, u.sms, u.check_on_delivery
-                                          /* /ukrposhta */ 
+                                        u.recipient_postcode, u.recipient_inn,
+                                        u.recipient_name, u.recipient_sername,
+                                        u.recipient_bank_code, u.recipient_bank_account,
+                                        u.parcel_weight, u.parcel_length,
+                                        u.paid_by, u.payment_type, u.sms, u.check_on_delivery
+                                        /* /ukrposhta */ 
 										FROM __orders o 
 										/* ukrposhta */
 										LEFT JOIN __ukrposhta_order u ON o.id = u.order_id
@@ -194,6 +195,7 @@ class Orders extends Simpla
         $query = $this->db->placehold("SELECT 
                                           u.id,
                                           u.recipient_postcode, u.recipient_inn, 
+                                          u.recipient_name, u.recipient_sername,
                                           u.recipient_bank_code, u.recipient_bank_account,
                                           u.parcel_weight, u.parcel_length,
                                           u.paid_by, u.payment_type, u.sms, u.check_on_delivery

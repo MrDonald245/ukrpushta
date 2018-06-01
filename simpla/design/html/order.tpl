@@ -1,24 +1,24 @@
 {* Вкладки *}
 {capture name=tabs}
-{if in_array('orders', $manager->permissions)}
-<li {if $order->status==0}class="active"{/if}><a href="index.php?module=OrdersAdmin&status=0">Новые</a></li>
-<li {if $order->status==1}class="active"{/if}><a href="index.php?module=OrdersAdmin&status=1">Приняты</a></li>
-<li {if $order->status==2}class="active"{/if}><a href="index.php?module=OrdersAdmin&status=2">Выполнены</a></li>
-<li {if $order->status==3}class="active"{/if}><a href="index.php?module=OrdersAdmin&status=3">Удалены</a></li>
-{if $keyword}
-<li class="active"><a href="{url module=OrdersAdmin keyword=$keyword id=null label=null}">Поиск</a></li>
-{/if}
-{/if}
-{if in_array('labels', $manager->permissions)}
-<li><a href="{url module=OrdersLabelsAdmin keyword=null id=null page=null label=null}">Метки</a></li>
-{/if}
+  {if in_array('orders', $manager->permissions)}
+    <li {if $order->status==0}class="active"{/if}><a href="index.php?module=OrdersAdmin&status=0">Новые</a></li>
+    <li {if $order->status==1}class="active"{/if}><a href="index.php?module=OrdersAdmin&status=1">Приняты</a></li>
+    <li {if $order->status==2}class="active"{/if}><a href="index.php?module=OrdersAdmin&status=2">Выполнены</a></li>
+    <li {if $order->status==3}class="active"{/if}><a href="index.php?module=OrdersAdmin&status=3">Удалены</a></li>
+    {if $keyword}
+      <li class="active"><a href="{url module=OrdersAdmin keyword=$keyword id=null label=null}">Поиск</a></li>
+    {/if}
+  {/if}
+  {if in_array('labels', $manager->permissions)}
+    <li><a href="{url module=OrdersLabelsAdmin keyword=null id=null page=null label=null}">Метки</a></li>
+  {/if}
 {/capture}
 
 
 {if $order->id}
-{$meta_title = "Заказ №`$order->id`" scope=parent}
+  {$meta_title = "Заказ №`$order->id`" scope=parent}
 {else}
-{$meta_title = 'Новый заказ' scope=parent}
+  {$meta_title = 'Новый заказ' scope=parent}
 {/if}
 
 <!-- Основная форма -->
@@ -41,10 +41,10 @@
 
     <div id=next_order>
       {if $prev_order}
-      <a class=prev_order href="{url id=$prev_order->id}">←</a>
+        <a class=prev_order href="{url id=$prev_order->id}">←</a>
       {/if}
       {if $next_order}
-      <a class=next_order href="{url id=$next_order->id}">→</a>
+        <a class=next_order href="{url id=$next_order->id}">→</a>
       {/if}
     </div>
 
@@ -52,25 +52,25 @@
 
 
   {if $message_error}
-  <!-- Системное сообщение -->
-  <div class="message message_error">
+    <!-- Системное сообщение -->
+    <div class="message message_error">
     <span
-        class="text">{if $message_error=='error_closing'}Нехватка товара на складе{else}{$message_error|escape}{/if}</span>
-    {if $smarty.get.return}
-    <a class="button" href="{$smarty.get.return}">Вернуться</a>
-    {/if}
-  </div>
-  <!-- Системное сообщение (The End)-->
+            class="text">{if $message_error=='error_closing'}Нехватка товара на складе{else}{$message_error|escape}{/if}</span>
+      {if $smarty.get.return}
+        <a class="button" href="{$smarty.get.return}">Вернуться</a>
+      {/if}
+    </div>
+    <!-- Системное сообщение (The End)-->
   {elseif $message_success}
-  <!-- Системное сообщение -->
-  <div class="message message_success">
+    <!-- Системное сообщение -->
+    <div class="message message_success">
     <span
-        class="text">{if $message_success=='updated'}Заказ обновлен{elseif $message_success=='added'}Заказ добавлен{else}{$message_success}{/if}</span>
-    {if $smarty.get.return}
-    <a class="button" href="{$smarty.get.return}">Вернуться</a>
-    {/if}
-  </div>
-  <!-- Системное сообщение (The End)-->
+            class="text">{if $message_success=='updated'}Заказ обновлен{elseif $message_success=='added'}Заказ добавлен{else}{$message_success}{/if}</span>
+      {if $smarty.get.return}
+        <a class="button" href="{$smarty.get.return}">Вернуться</a>
+      {/if}
+    </div>
+    <!-- Системное сообщение (The End)-->
   {/if}
 
 
@@ -111,14 +111,14 @@
           </div>
           <div class="view_order_detail">
             {if $order->phone}
-            <span class="ip_call" data-phone="{$order->phone|escape}"
-                  target="_blank">{$order->phone|escape}</span>{else}{$order->phone|escape}{/if}
+              <span class="ip_call" data-phone="{$order->phone|escape}"
+                    target="_blank">{$order->phone|escape}</span>{else}{$order->phone|escape}{/if}
           </div>
         </li>
         <li>
           <label class=property>Адрес <a href='http://maps.yandex.ru/' id=address_link target=_blank><img
-              align=absmiddle src='design/images/map.png' alt='Карта в новом окне'
-              title='Карта в новом окне'></a></label>
+                      align=absmiddle src='design/images/map.png' alt='Карта в новом окне'
+                      title='Карта в новом окне'></a></label>
           <div class="edit_order_detail" style='display:none;'>
             <textarea name="address">{$order->address|escape}</textarea>
           </div>
@@ -140,37 +140,37 @@
 
 
     {if $labels}
-    <div class='layer'>
-      <h2>Метка</h2>
-      <!-- Метки -->
-      <ul>
-        {foreach $labels as $l}
-        <li>
-          <label for="label_{$l->id}">
-            <input id="label_{$l->id}" type="checkbox" name="order_labels[]" value="{$l->id}"
-                   {if in_array($l->id, $order_labels)}checked{/if}>
-            <span style="background-color:#{$l->color};" class="order_label"></span>
-            {$l->name}
-          </label>
-        </li>
-        {/foreach}
-      </ul>
-      <!-- Метки -->
-    </div>
+      <div class='layer'>
+        <h2>Метка</h2>
+        <!-- Метки -->
+        <ul>
+          {foreach $labels as $l}
+            <li>
+              <label for="label_{$l->id}">
+                <input id="label_{$l->id}" type="checkbox" name="order_labels[]" value="{$l->id}"
+                       {if in_array($l->id, $order_labels)}checked{/if}>
+                <span style="background-color:#{$l->color};" class="order_label"></span>
+                {$l->name}
+              </label>
+            </li>
+          {/foreach}
+        </ul>
+        <!-- Метки -->
+      </div>
     {/if}
 
 
     <div class='layer'>
       <h2>Покупатель <a href='#' class="edit_user"><img src='design/images/pencil.png' alt='Редактировать'
                                                         title='Редактировать'></a> {if $user}
-        <a href="#" class='delete_user'><img src='design/images/delete.png' alt='Удалить' title='Удалить'></a>
+          <a href="#" class='delete_user'><img src='design/images/delete.png' alt='Удалить' title='Удалить'></a>
         {/if}</h2>
       <div class='view_user'>
         {if !$user}
-        Не зарегистрирован
+          Не зарегистрирован
         {else}
-        <a href='index.php?module=UserAdmin&id={$user->id}' target=_blank>{$user->name|escape}</a>
-        ({$user->email|escape})
+          <a href='index.php?module=UserAdmin&id={$user->id}' target=_blank>{$user->name|escape}</a>
+          ({$user->email|escape})
         {/if}
       </div>
       <div class='edit_user' style='display:none;'>
@@ -204,20 +204,20 @@
 
     <div id="list" class="purchases">
       {foreach $purchases as $purchase}
-      <div class="row">
-        <div class="image cell">
-          <input type=hidden name=purchases[id][{$purchase->id}] value='{$purchase->id}'>
-          {$image = $purchase->product->images|first}
-          {if $image}
-          <img class=product_icon src='{$image->filename|resize:35:35}'>
-          {/if}
-        </div>
-        <div class="purchase_name cell">
+        <div class="row">
+          <div class="image cell">
+            <input type=hidden name=purchases[id][{$purchase->id}] value='{$purchase->id}'>
+            {$image = $purchase->product->images|first}
+            {if $image}
+              <img class=product_icon src='{$image->filename|resize:35:35}'>
+            {/if}
+          </div>
+          <div class="purchase_name cell">
 
-          <div class='purchase_variant'>
+            <div class='purchase_variant'>
 				<span class=edit_purchase style='display:none;'>
 				<select name=purchases[variant_id][{$purchase->id}]
-                        {if $purchase->product->variants|count==1 && $purchase->variant_name == '' && $purchase->variant->sku == ''}style='display:none;'{/if}>
+                {if $purchase->product->variants|count==1 && $purchase->variant_name == '' && $purchase->variant->sku == ''}style='display:none;'{/if}>
 		    	{if !$purchase->variant}
             <option price='{$purchase->price}' amount='{$purchase->amount}'
                     value=''>{$purchase->variant_name|escape} {if $purchase->sku}(арт. {$purchase->sku}){/if}</option>{/if}
@@ -232,30 +232,30 @@
           {/foreach}
 				</select>
 				</span>
-            <span class=view_purchase>
+              <span class=view_purchase>
 					{$purchase->variant_name} {if $purchase->sku}(арт. {$purchase->sku}){/if}			
 				</span>
-          </div>
+            </div>
 
-          {if $purchase->product}
-          <a class="related_product_name"
-             href="index.php?module=ProductAdmin&id={$purchase->product->id}&return={$smarty.server.REQUEST_URI|urlencode}">{$purchase->product_name}</a>
-          {else}
-          {$purchase->product_name}
-          {/if}
-        </div>
-        <div class="price cell">
-          <span class=view_purchase>{$purchase->price}</span>
-          <span class=edit_purchase style='display:none;'>
+            {if $purchase->product}
+              <a class="related_product_name"
+                 href="index.php?module=ProductAdmin&id={$purchase->product->id}&return={$smarty.server.REQUEST_URI|urlencode}">{$purchase->product_name}</a>
+            {else}
+              {$purchase->product_name}
+            {/if}
+          </div>
+          <div class="price cell">
+            <span class=view_purchase>{$purchase->price}</span>
+            <span class=edit_purchase style='display:none;'>
 				<input type=text name=purchases[price][{$purchase->id}] value='{$purchase->price}' size=5>
 				</span>
-          {$currency->sign}
-        </div>
-        <div class="amount cell">
+            {$currency->sign}
+          </div>
+          <div class="amount cell">
 				<span class=view_purchase>
 					{$purchase->amount} {$settings->units}
 				</span>
-          <span class=edit_purchase style='display:none;'>
+            <span class=edit_purchase style='display:none;'>
 					{if $purchase->variant}
             {math equation="min(max(x,y),z)" x=$purchase->variant->stock+$purchase->amount*($order->closed) y=$purchase->amount z=$settings->max_order_amount assign="loop"}
           {else}
@@ -268,23 +268,23 @@
             {/section}
 			        </select>
 				</span>
+          </div>
+          <div class="icons cell">
+            {if !$order->closed}
+              {if !$purchase->product}
+                <img src='design/images/error.png' alt='Товар был удалён' title='Товар был удалён'>
+              {elseif !$purchase->variant}
+                <img src='design/images/error.png' alt='Вариант товара был удалён' title='Вариант товара был удалён'>
+              {elseif $purchase->variant->stock < $purchase->amount}
+                <img src='design/images/error.png'
+                     alt='На складе остал{$purchase->variant->stock|plural:'ся':'ось'} {$purchase->variant->stock} товар{$purchase->variant->stock|plural:'':'ов':'а'}'
+                     title='На складе остал{$purchase->variant->stock|plural:'ся':'ось'} {$purchase->variant->stock} товар{$purchase->variant->stock|plural:'':'ов':'а'}'>
+              {/if}
+            {/if}
+            <a href='#' class="delete" title="Удалить"></a>
+          </div>
+          <div class="clear"></div>
         </div>
-        <div class="icons cell">
-          {if !$order->closed}
-          {if !$purchase->product}
-          <img src='design/images/error.png' alt='Товар был удалён' title='Товар был удалён'>
-          {elseif !$purchase->variant}
-          <img src='design/images/error.png' alt='Вариант товара был удалён' title='Вариант товара был удалён'>
-          {elseif $purchase->variant->stock < $purchase->amount}
-          <img src='design/images/error.png'
-               alt='На складе остал{$purchase->variant->stock|plural:'ся':'ось'} {$purchase->variant->stock} товар{$purchase->variant->stock|plural:'':'ов':'а'}'
-               title='На складе остал{$purchase->variant->stock|plural:'ся':'ось'} {$purchase->variant->stock} товар{$purchase->variant->stock|plural:'':'ов':'а'}'>
-          {/if}
-          {/if}
-          <a href='#' class="delete" title="Удалить"></a>
-        </div>
-        <div class="clear"></div>
-      </div>
       {/foreach}
       <div id="new_purchase" class="row" style='display:none;'>
         <div class="image cell">
@@ -315,14 +315,14 @@
              placeholder='Выберите товар чтобы добавить его'>
     </div>
     {if $purchases}
-    <a href='#' class="dash_link edit_purchases">редактировать покупки</a>
+      <a href='#' class="dash_link edit_purchases">редактировать покупки</a>
     {/if}
 
 
     {if $purchases}
-    <div class="subtotal">
-      Всего<b> {$subtotal} {$currency->sign}</b>
-    </div>
+      <div class="subtotal">
+        Всего<b> {$subtotal} {$currency->sign}</b>
+      </div>
     {/if}
 
     <div class="block discount layer">
@@ -337,7 +337,7 @@
     <div class="block discount layer">
       <h2>Купон{if $order->coupon_code} ({$order->coupon_code}){/if}</h2>
       <input type=text name=coupon_discount value='{$order->coupon_discount}'> <span
-        class=currency>{$currency->sign}</span>
+              class=currency>{$currency->sign}</span>
     </div>
 
     <div class="subtotal layer">
@@ -349,11 +349,11 @@
       <select name="delivery_id">
         <option value="0">Не выбрана</option>
         {foreach $deliveries as $d}
-        <option value="{$d->id}" {if $d->id==$delivery->id}selected{/if}>{$d->name}</option>
+          <option value="{$d->id}" {if $d->id==$delivery->id}selected{/if}>{$d->name}</option>
         {/foreach}
       </select>
       <input type=text name=delivery_price value='{$order->delivery_price}'> <span
-        class=currency>{$currency->sign}</span>
+              class=currency>{$currency->sign}</span>
       <div class="separate_delivery">
         <input type=checkbox id="separate_delivery" name=separate_delivery value='1'
                {if $order->separate_delivery}checked{/if}> <label for="separate_delivery">оплачивается отдельно</label>
@@ -361,126 +361,132 @@
 
       {* ukrposhta *}
       {if $settings->ukrposhta_token && $settings->ukrposhta_bearer}
-      <div class="ukr_post">
-        {if $delivery_id == 777}
-        <div class="block layer ukr_post" id="test_place_for_dpf">
+        <div class="ukr_post">
+          {if $delivery_id == 777}
+            <div class="block layer ukr_post" id="test_place_for_dpf">
 
-          <script src="/design/{$settings->theme|escape}/js/ukr_post_api.js"></script>
-          <ul>
-            <li>
-              <div style="margin-bottom: 6px;">
+              <script src="/design/{$settings->theme|escape}/js/ukr_post_api.js"></script>
+              <ul>
+                <li>
+                  <div style="margin-bottom: 6px;">
                                         <span class="ukrposhta_add_en button_green"
                                               {if $order->id}id_orders="{$order->id}"{/if}>Создать накладную <span
-                                            class="print_new_pos"></span></span></div>
-              <a id="test" href=""></a>
-            </li>
+                                                  class="print_new_pos"></span></span></div>
+                  <a id="test" href=""></a>
+                </li>
 
-            <li><span class="recipient_info">Данные получателя:</span></li>
+                <li><span class="recipient_info">Данные получателя:</span></li>
 
-            <li class="reci_d">
-              <label for="ukrposhta_recipient_postcode">Почтовый индекс:</label>
-              <input required id="ukrposhta_recipient_postcode"
-                     name="ukrposhta_recipient_postcode"
-                     type="text" {if $ukrposhta->recipient_postcode}
-                     value="{$ukrposhta->recipient_postcode}"{/if}>
-            </li>
+                <li class="reci_d">
+                  <label for="ukrposhta_recipient_postcode">Почтовый индекс:</label>
+                  <input required id="ukrposhta_recipient_postcode"
+                         name="ukrposhta_recipient_postcode"
+                         type="text" {if $ukrposhta->recipient_postcode}
+                  value="{$ukrposhta->recipient_postcode}"{/if}>
+                </li>
 
-            <li class="reci_d">
-              <label for="ukrposhta_recipient_inn">ИНН:</label>
-              <input disabled id="ukrposhta_recipient_inn" name="ukrposhta_recipient_inn"
-                     type="text" value="{$ukrposhta->recipient_inn}">
-            </li>
+                <li class="reci_d">
+                  <label for="ukrposhta_recipient_name">Имя получателя:</label>
+                  <input required id="ukrposhta_recipient_name"
+                         name="ukrposhta_recipient_name"
+                         type="text" {if $ukrposhta->recipient_name} value="{$ukrposhta->recipient_name}"{/if}></li>
 
-            <li><span class="recipient_info">Посылка:</span></li>
+                <li class="reci_d">
+                  <label for="ukrposhta_recipient_sername">Фамилия получателя:</label>
+                  <input required id="ukrposhta_recipient_sername"
+                         name="ukrposhta_recipient_sername"
+                         type="text" {if $ukrposhta->recipient_sername} value="{$ukrposhta->recipient_sername}"{/if}></li>
 
-            <p>Оплачевает:</p>
-            <li style="margin: 0 0 5px 10px;">
-              <label for="ukrposhta_paid_by_sender">отправитель</label>
-              <input name="ukrposhta_paid_by" id="ukrposhta_paid_by_sender"
-                     class="simpla_inp" type="radio" value="sender"
-                     {if $ukrposhta->paid_by == 'sender'}checked{/if}/>
-              <label for="ukrposhta_paid_by_recipient">получатель</label>
-              <input name="ukrposhta_paid_by" id="ukrposhta_paid_by_recipient"
-                     class="simpla_inp" type="radio" value="recipient"
-                     {if $ukrposhta->paid_by == 'recipient'}checked{/if}/>
-            </li>
+                <li style="margin-top: 15px"><span class="recipient_info">Посылка:</span></li>
 
-            <li class="reci_d">
-              <label for="ukrposhta_parcel_weight">Вес (30000 грамм максимум):</label>
-              <input id="ukrposhta_parcel_weight" name="ukrposhta_parcel_weight"
-                     type="text" {if $ukrposhta->parcel_weight}
-                     value="{$ukrposhta->parcel_weight}"{/if}>
-            </li>
+                <p>Оплачевает:</p>
+                <li style="margin: 0 0 5px 10px;">
+                  <label for="ukrposhta_paid_by_sender">отправитель</label>
+                  <input name="ukrposhta_paid_by" id="ukrposhta_paid_by_sender"
+                         class="simpla_inp" type="radio" value="sender"
+                         {if $ukrposhta->paid_by == 'sender'}checked{/if}/>
+                  <label for="ukrposhta_paid_by_recipient">получатель</label>
+                  <input name="ukrposhta_paid_by" id="ukrposhta_paid_by_recipient"
+                         class="simpla_inp" type="radio" value="recipient"
+                         {if $ukrposhta->paid_by == 'recipient'}checked{/if}/>
+                </li>
 
-            <li class="reci_d">
-              <label for="ukrposhta_parcel_length">
-                Размер самой большой стороны посылки(см):</label>
-              <input id="ukrposhta_parcel_length" name="ukrposhta_parcel_length"
-                     type="text" {if $ukrposhta->parcel_length}
-                     value="{$ukrposhta->parcel_length}"{/if}>
-            </li>
-          </ul>
+                <li class="reci_d">
+                  <label for="ukrposhta_parcel_weight">Вес (30000 грамм максимум):</label>
+                  <input id="ukrposhta_parcel_weight" name="ukrposhta_parcel_weight"
+                         type="text" {if $ukrposhta->parcel_weight}
+                  value="{$ukrposhta->parcel_weight}"{/if}>
+                </li>
 
-          <div id="ukrpost_detailed_info">
-            <a style="cursor: pointer; text-decoration: underline;">
-              Дополнительная информация...</a>
-            <a style="cursor: pointer; text-decoration: underline; display: none;">
-              Скрыть дополнительную информацию...</a>
-          </div>
+                <li class="reci_d">
+                  <label for="ukrposhta_parcel_length">
+                    Размер самой большой стороны посылки(см):</label>
+                  <input id="ukrposhta_parcel_length" name="ukrposhta_parcel_length"
+                         type="text" {if $ukrposhta->parcel_length}
+                  value="{$ukrposhta->parcel_length}"{/if}>
+                </li>
+              </ul>
 
-          <div id="ukrpost_detailed_info_body" style="display: none;">
-            <ul>
+              <div id="ukrpost_detailed_info">
+                <a style="cursor: pointer; text-decoration: underline;">
+                  Дополнительная информация...</a>
+                <a style="cursor: pointer; text-decoration: underline; display: none;">
+                  Скрыть дополнительную информацию...</a>
+              </div>
 
-              <li><span class="recipient_info">При прибытии:</span></li>
+              <div id="ukrpost_detailed_info_body" style="display: none;">
+                <ul>
 
-              <li style="margin-top: 0;">
-                <label for="ukrposhta_sms">Отправлять SMS получателю:</label>
-                <input id="ukrposhta_sms" name="ukrposhta_sms" type="checkbox"
-                       {if $ukrposhta->sms}checked{/if}>
-              </li>
+                  <li><span class="recipient_info">При прибытии:</span></li>
 
-              <li style="margin-bottom: 10px">
-                <label for="ukrposhta_check_on_delivery">Разрешить проверку посылки:</label>
-                <input id="ukrposhta_check_on_delivery" name="ukrposhta_check_on_delivery"
-                       type="checkbox"
-                       {if $ukrposhta->check_on_delivery}checked{/if}>
-              </li>
+                  <li style="margin-top: 0;">
+                    <label for="ukrposhta_sms">Отправлять SMS получателю:</label>
+                    <input id="ukrposhta_sms" name="ukrposhta_sms" type="checkbox"
+                           {if $ukrposhta->sms}checked{/if}>
+                  </li>
 
-              <li><span class="recipient_info">Тип оплаты:</span></li>
+                  <li style="margin-bottom: 10px">
+                    <label for="ukrposhta_check_on_delivery">Разрешить проверку посылки:</label>
+                    <input id="ukrposhta_check_on_delivery" name="ukrposhta_check_on_delivery"
+                           type="checkbox"
+                           {if $ukrposhta->check_on_delivery}checked{/if}>
+                  </li>
 
-              <li style="margin-bottom: 5px;">
-                <label for="ukrposhta_noncash_payment">Безналичный</label>
-                <input name="ukrposhta_payment_type" id="ukrposhta_noncash_payment"
-                       class="simpla_inp" type="radio" value="noncash"
-                       {if $ukrposhta->payment_type == 'noncash'}checked{/if}/>
-                <label for="ukrposhta_cash_payment">Наличный</label>
-                <input name="ukrposhta_payment_type" id="ukrposhta_cash_payment"
-                       class="simpla_inp" type="radio" value="cash"
-                       {if $ukrposhta->payment_type == 'cash'}checked{/if}/>
-              </li>
+                  <li><span class="recipient_info">Тип оплаты:</span></li>
 
-              <li><span class="recipient_info">Банк:</span></li>
+                  <li style="margin-bottom: 5px;">
+                    <label for="ukrposhta_noncash_payment">Безналичный</label>
+                    <input name="ukrposhta_payment_type" id="ukrposhta_noncash_payment"
+                           class="simpla_inp" type="radio" value="noncash"
+                           {if $ukrposhta->payment_type == 'noncash'}checked{/if}/>
+                    <label for="ukrposhta_cash_payment">Наличный</label>
+                    <input name="ukrposhta_payment_type" id="ukrposhta_cash_payment"
+                           class="simpla_inp" type="radio" value="cash"
+                           {if $ukrposhta->payment_type == 'cash'}checked{/if}/>
+                  </li>
 
-              <li class="reci_d">
-                <label for="ukrposhta_recipient_bank_code">Код банка:</label>
-                <input disabled id="ukrposhta_recipient_bank_code"
-                       name="ukrposhta_recipient_bank_code"
-                       type="text" value="{$ukrposhta->recipient_bank_code}">
-              </li>
+                  <li><span class="recipient_info">Банк:</span></li>
 
-              <li class="reci_d">
-                <label for="ukrposhta_recipient_bank_account">Номер карты:</label>
-                <input disabled id="ukrposhta_recipient_bank_account"
-                       name="ukrposhta_recipient_bank_account"
-                       type="text" value="{$ukrposhta->recipient_bank_account}">
-              </li>
+                  <li class="reci_d">
+                    <label for="ukrposhta_recipient_bank_code">Код банка:</label>
+                    <input disabled id="ukrposhta_recipient_bank_code"
+                           name="ukrposhta_recipient_bank_code"
+                           type="text" value="{$ukrposhta->recipient_bank_code}">
+                  </li>
 
-            </ul>
-          </div>
+                  <li class="reci_d">
+                    <label for="ukrposhta_recipient_bank_account">Номер карты:</label>
+                    <input disabled id="ukrposhta_recipient_bank_account"
+                           name="ukrposhta_recipient_bank_account"
+                           type="text" value="{$ukrposhta->recipient_bank_account}">
+                  </li>
 
+                </ul>
+              </div>
+
+            </div>
+          {/if}
         </div>
-        {/if}
-      </div>
       {/if}
       {* /ukrposhta *}
     </div>
@@ -495,20 +501,20 @@
       <select name="payment_method_id">
         <option value="0">Не выбрана</option>
         {foreach $payment_methods as $pm}
-        <option value="{$pm->id}" {if $pm->id==$payment_method->id}selected{/if}>{$pm->name}</option>
+          <option value="{$pm->id}" {if $pm->id==$payment_method->id}selected{/if}>{$pm->name}</option>
         {/foreach}
       </select>
 
       <input type=checkbox name="paid" id="paid" value="1" {if $order->paid}checked{/if}> <label for="paid"
                                                                                                  {if $order->paid}class="green"{/if}>Заказ
-      оплачен</label>
+        оплачен</label>
     </div>
 
 
     {if $payment_method}
-    <div class="subtotal layer">
-      К оплате<b> {$order->total_price|convert:$payment_currency->id} {$payment_currency->sign}</b>
-    </div>
+      <div class="subtotal layer">
+        К оплате<b> {$order->total_price|convert:$payment_currency->id} {$payment_currency->sign}</b>
+      </div>
     {/if}
 
 
@@ -529,7 +535,7 @@
 
 {* On document load *}
 {literal}
-<script src="design/js/autocomplete/jquery.autocomplete-min.js"></script>
+  <script src="design/js/autocomplete/jquery.autocomplete-min.js"></script>
 
 <script>
     $(function () {
@@ -684,32 +690,32 @@
 
 </script>
 
-<style>
-  .autocomplete-suggestions {
-    background-color: #ffffff;
-    overflow: hidden;
-    border: 1px solid #e0e0e0;
-    overflow-y: auto;
-  }
+  <style>
+    .autocomplete-suggestions {
+      background-color: #ffffff;
+      overflow: hidden;
+      border: 1px solid #e0e0e0;
+      overflow-y: auto;
+    }
 
-  .autocomplete-suggestions .autocomplete-suggestion {
-    cursor: default;
-  }
+    .autocomplete-suggestions .autocomplete-suggestion {
+      cursor: default;
+    }
 
-  .autocomplete-suggestions .selected {
-    background: #F0F0F0;
-  }
+    .autocomplete-suggestions .selected {
+      background: #F0F0F0;
+    }
 
-  .autocomplete-suggestions div {
-    padding: 2px 5px;
-    white-space: nowrap;
-  }
+    .autocomplete-suggestions div {
+      padding: 2px 5px;
+      white-space: nowrap;
+    }
 
-  .autocomplete-suggestions strong {
-    font-weight: normal;
-    color: #3399FF;
-  }
-</style>
+    .autocomplete-suggestions strong {
+      font-weight: normal;
+      color: #3399FF;
+    }
+  </style>
 {/literal}
 {* ukrposhta *}
 <link rel="stylesheet" type="text/css" href="/js/fancybox/jquery.fancybox.css">

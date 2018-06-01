@@ -43,10 +43,10 @@ class UkrposhtaEnGenerator
      */
     private $recipientInfo = [
         'postcode'     => '',
-        'inn'          => '',
         'bank_code'    => '',
         'bank_account' => '',
-        'name'         => '',
+        'firstName'    => '',
+        'lastName'     => '',
         'phone'        => '',
         'email'        => '',
     ];
@@ -182,12 +182,12 @@ class UkrposhtaEnGenerator
     {
         $recipient = [];
 
+        $recipient['firstName']    = $this->simpla->request->get('recipient_name', 'string');
+        $recipient['lastName']     = $this->simpla->request->get('recipient_sername', 'string');
         $recipient['postcode']     = $this->simpla->request->get('recipient_postcode', 'string');
-        $recipient['inn']          = $this->simpla->request->get('recipient_inn', 'string');
         $recipient['bank_code']    = $this->simpla->request->get('recipient_bank_code', 'string');
         $recipient['bank_account'] = $this->simpla->request->get('recipient_bank_account', 'string');
 
-        $recipient['name']  = $this->order->name;
         $recipient['phone'] = $this->order->phone;
         $recipient['email'] = $this->order->email;
 
@@ -262,10 +262,9 @@ class UkrposhtaEnGenerator
     public function createRecipientEntity($addressId)
     {
         $recipient_client = new Client();
-        $recipient_name   = $this->parseName($this->recipientInfo['name']);
 
-        $first_name = $recipient_name['firstName'];
-        $last_name  = $recipient_name['lastName'];
+        $first_name = $this->recipientInfo['firstName'];
+        $last_name  = $this->recipientInfo['lastName'];
 
         if ($first_name && $last_name) {
             $recipient_client->setFirstName($first_name)
@@ -280,30 +279,9 @@ class UkrposhtaEnGenerator
                          ->setEmail($this->recipientInfo['email'])
                          ->setPhoneNumber($this->recipientInfo['phone'])
                          ->setBankCode($this->recipientInfo['bank_code'])
-                         ->setBankAccount($this->recipientInfo['bank_account'])
-                         ->setUniqueRegistrationNumber($this->recipientInfo['inn']);
+                         ->setBankAccount($this->recipientInfo['bank_account']);
 
         return $recipient_client;
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return array with firstName and lastName
-     */
-    private function parseName($name)
-    {
-        $pattern = "/([а-я]+)(,|\s|,\s)([а-я]+)/iu";
-        $match   = '';
-
-        if (!preg_match($pattern, $name, $match)) {
-            return [];
-        }
-
-        return [
-            'firstName' => $match[1],
-            'lastName'  => $match[3],
-        ];
     }
 
     /**

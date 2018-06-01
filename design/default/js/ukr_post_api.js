@@ -25,7 +25,8 @@ $(function () {
             data:     {
                 order_id:               $('.ukrposhta_add_en').attr('id_orders'),
                 recipient_postcode:     recipient_postcode,
-                recipient_inn:          $('#ukrposhta_recipient_inn').val(),
+                recipient_name:         $('#ukrposhta_recipient_name').val(),
+                recipient_sername:      $('#ukrposhta_recipient_sername').val(),
                 recipient_bank_code:    $('#ukrposhta_recipient_bank_code:not(:disabled)').val(),
                 recipient_bank_account: $('#ukrposhta_recipient_bank_account:not(:disabled)').val(),
                 parcel_weight:          $('#ukrposhta_parcel_weight').val(),
