@@ -53,7 +53,7 @@ class OrderAdmin extends Simpla
             } else {
                 $this->orders->update_order($order->id, $order);
                 /* ukrposhta */
-                $this->orders->update_ukrposhta($ukrposhta->id, $ukrposhta);
+                $this->orders->update_ukrposhta($order->id, $ukrposhta);
                 /* /ukrposhta */
                 $this->design->assign('message_success', 'updated');
             }

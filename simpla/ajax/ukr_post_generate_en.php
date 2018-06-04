@@ -24,6 +24,16 @@ class UkrposhtaEnGenerator
     private $simpla;
 
     /**
+     * @var int $order_id
+     */
+    private $order_id;
+
+    /**
+     * @var string $ukrposhtaFilesDir
+     */
+    private $ukrposhtaFilesDir = 'files/ukrpost';
+
+    /**
      * @var array $senderInfo
      */
     private $senderInfo = [
@@ -74,20 +84,13 @@ class UkrposhtaEnGenerator
     private $wrapper;
 
     /**
-     * @var Orders $order
-     */
-    private $order;
-
-    /**
      * UkrposhtaEnGenerator constructor.
      */
     public function __construct()
     {
         $this->simpla = new Simpla();
 
-        $order_id    = $this->simpla->request->get('order_id', 'string');
-        $this->order = $this->simpla->orders->get_order((int)$order_id);
-
+        $this->order_id      = $this->simpla->request->get('order_id', 'string');
         $this->senderInfo    = $this->getSenderInfo();
         $this->recipientInfo = $this->getRecipientInfo();
         $this->parcelsInfo   = $this->getParcelsInfo();
@@ -120,13 +123,25 @@ class UkrposhtaEnGenerator
             // Create shipment:
             $shipment = $this->wrapper->shipment()
                                       ->create($this->createShipmentEntity($sender_client->getUuid(),
-                                                                           $recipient_client->getUuid(), $this->parcelsInfo));
+                                                                           $recipient_client->getUuid(),
+                                                                           $this->parcelsInfo));
 
             // Print shipment (get contents of PDF)
             $pdf_contents = $this->wrapper->printForm()->shipmentSticker($shipment->getUuid());
 
+            // If the older version of a shipment file is found,
+            $ukrposhta = $this->simpla->orders->get_order_ukrposhta($this->order_id);
+            if ($this->isShipmentFileExist($ukrposhta->shipment_file_name)) {
+                $this->removeShipmentFile($ukrposhta->shipment_file_name); // delete the file.
+            }
+
+            // Create shipment file and save it to the database:
+            $pdf_file = $this->createPdfFile($pdf_contents, $shipment->getUuid());
+            $this->updateShipmentFilename($shipment->getUuid());
+
             // Return created pdf without error.
-            return json_encode(['pdf' => $this->createPdfFile($pdf_contents), 'error' => null,]);
+            return json_encode(['pdf'   => $pdf_file,
+                                'error' => null,]);
 
         } catch (UkrposhtaApiException $exception) {
             return json_encode(['error' => [
@@ -145,6 +160,49 @@ class UkrposhtaEnGenerator
     }
 
     /**
+     * Save link to a pdf shipment file in the database.
+     *
+     * @param string $shipmentUuid
+     *
+     * @return void
+     */
+    private function updateShipmentFilename($shipmentUuid)
+    {
+        $shipment                     = new stdClass();
+        $shipment->shipment_file_name = "$shipmentUuid.pdf";
+        $this->simpla->orders->update_ukrposhta($this->order_id, $shipment);
+    }
+
+    /**
+     * Checks if shipment file exists.
+     *
+     * @param string $filename
+     *
+     * @return bool
+     */
+    private function isShipmentFileExist($filename)
+    {
+        $full_path = $this->simpla->config->root_dir . "$this->ukrposhtaFilesDir/$filename";
+        $res = file_exists($this->simpla->config->root_dir . "$this->ukrposhtaFilesDir/$filename");
+        return $res;
+    }
+
+    /**
+     * Remove file physically from drive.
+     *
+     * @param string $filename
+     *
+     * @return void
+     * @throws Exception
+     */
+    private function removeShipmentFile($filename)
+    {
+        if (!unlink($this->simpla->config->root_dir . "$this->ukrposhtaFilesDir/$filename")) {
+            throw new Exception("Невозможно удалить файл $filename");
+        }
+    }
+
+    /**
      * Create pdf file, fill it with pdf contents and return file path.
      *
      * @param string $pdfContents
@@ -152,9 +210,9 @@ class UkrposhtaEnGenerator
      * @return string url to file
      * @throws Exception
      */
-    private function createPdfFile($pdfContents)
+    private function createPdfFile($pdfContents, $filename)
     {
-        $filename = 'files/ukrpost/Накладная заказа №' . $this->order->id . '.pdf';
+        $filename = "$this->ukrposhtaFilesDir/$filename.pdf";
         $url      = $this->simpla->config->root_url . '/' . $filename;
         $filename = $this->simpla->config->root_dir . $filename;
         $dirname  = dirname($filename);
@@ -243,8 +301,8 @@ class UkrposhtaEnGenerator
      */
     private function getParcelsInfo()
     {
-        $parcels['weight'] = $this->simpla->request->get('parcel_weight', 'string');
-        $parcels['length'] = $this->simpla->settings->ukrposhta_parcel_length;
+        $parcels['weight']        = $this->simpla->request->get('parcel_weight', 'string');
+        $parcels['length']        = $this->simpla->settings->ukrposhta_parcel_length;
         $parcels['declaredPrice'] = $this->order->total_price;
 
         return $parcels;

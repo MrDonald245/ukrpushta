@@ -29,7 +29,7 @@ class Orders extends Simpla
                                         u.recipient_postcode, u.recipient_inn,
                                         u.recipient_name, u.recipient_sername,
                                         u.recipient_bank_code, u.recipient_bank_account,
-                                        u.parcel_weight, u.post_pay, u.paid_by
+                                        u.parcel_weight, u.post_pay, u.paid_by, u.shipment_file_name
                                         /* /ukrposhta */ 
 										FROM __orders o 
 										/* ukrposhta */
@@ -192,11 +192,10 @@ class Orders extends Simpla
         $where = $this->db->placehold('WHERE o.id = ?', $order_id);
 
         $query = $this->db->placehold("SELECT 
-                                          u.id,
-                                          u.recipient_postcode, u.recipient_inn, 
+                                          u.id, u.order_id,
+                                          u.recipient_postcode, 
                                           u.recipient_name, u.recipient_sername,
-                                          u.recipient_bank_code, u.recipient_bank_account,
-                                          u.parcel_weight, u.post_pay, u.paid_by
+                                          u.parcel_weight, u.post_pay, u.paid_by, u.shipment_file_name
 					                   FROM __orders o LEFT JOIN __ukrposhta_order u ON o.id = u.order_id
 					                   $where
 					                   LIMIT 1
@@ -220,17 +219,16 @@ class Orders extends Simpla
     /**
      * Update ukrposhta_order table.
      *
-     * @param string   $ukrposhta_id
+     * @param          $order_id
      * @param stdClass $ukrposhta
      *
-     * @return int update ukrposhta id
+     * @return void
      */
-    public function update_ukrposhta($ukrposhta_id, $ukrposhta)
+    public function update_ukrposhta($order_id, $ukrposhta)
     {
-        $query = $this->db->placehold("UPDATE __ukrposhta_order SET ?% WHERE id = ?",
-                                      $ukrposhta, $ukrposhta_id);
+        $query = $this->db->placehold("UPDATE __ukrposhta_order SET ?% WHERE order_id = ?",
+                                      $ukrposhta, $order_id);
         $this->db->query($query);
-        return $ukrposhta_id;
     }
 
     /**
