@@ -30,12 +30,8 @@ $(function () {
                 recipient_bank_code:    $('#ukrposhta_recipient_bank_code:not(:disabled)').val(),
                 recipient_bank_account: $('#ukrposhta_recipient_bank_account:not(:disabled)').val(),
                 parcel_weight:          $('#ukrposhta_parcel_weight').val(),
-                parcel_length:          $('#ukrposhta_parcel_length').val(),
-                paid_by:                $('[name=ukrposhta_paid_by]:checked').val(),
-                payment_type:           $('[name=ukrposhta_payment_type]:checked').val(),
-                sms:                    $('#ukrposhta_sms').is(':checked'),
-                check_on_delivery:      $('#ukrposhta_check_on_delivery').is(':checked'),
-                post_pay:               $('#ukrposhta_post_pay').is(':checked')
+                post_pay:               $('#ukrposhta_post_pay').is(':checked'),
+                paid_by:                $('[name=ukrposhta_paid_by]:checked').val()
             },
             dataType: 'json',
             success:  function (data) {

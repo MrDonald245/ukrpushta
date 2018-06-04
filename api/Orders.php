@@ -29,9 +29,7 @@ class Orders extends Simpla
                                         u.recipient_postcode, u.recipient_inn,
                                         u.recipient_name, u.recipient_sername,
                                         u.recipient_bank_code, u.recipient_bank_account,
-                                        u.parcel_weight, u.parcel_length,
-                                        u.paid_by, u.payment_type, u.sms, u.check_on_delivery,
-                                        u.post_pay
+                                        u.parcel_weight, u.post_pay, u.paid_by
                                         /* /ukrposhta */ 
 										FROM __orders o 
 										/* ukrposhta */
@@ -198,8 +196,7 @@ class Orders extends Simpla
                                           u.recipient_postcode, u.recipient_inn, 
                                           u.recipient_name, u.recipient_sername,
                                           u.recipient_bank_code, u.recipient_bank_account,
-                                          u.parcel_weight, u.parcel_length,
-                                          u.paid_by, u.payment_type, u.sms, u.check_on_delivery, u.post_pay
+                                          u.parcel_weight, u.post_pay, u.paid_by
 					                   FROM __orders o LEFT JOIN __ukrposhta_order u ON o.id = u.order_id
 					                   $where
 					                   LIMIT 1

@@ -397,7 +397,7 @@
                          name="ukrposhta_recipient_sername"
                          type="text" {if $ukrposhta->recipient_sername} value="{$ukrposhta->recipient_sername}"{/if}></li>
 
-                <li style="margin-top: 0;">
+                <li class="reci_d" >
                   <label for="ukrposhta_post_pay">Наложенный платеж</label>
                   <input id="ukrposhta_post_pay" name="ukrposhta_post_pay" type="checkbox"
                          {if $ukrposhta->post_pay}checked{/if}>
@@ -423,69 +423,6 @@
                          type="text" {if $ukrposhta->parcel_weight}
                   value="{$ukrposhta->parcel_weight}"{/if}>
                 </li>
-
-                <li class="reci_d">
-                  <label for="ukrposhta_parcel_length">
-                    Размер самой большой стороны посылки(см):</label>
-                  <input id="ukrposhta_parcel_length" name="ukrposhta_parcel_length"
-                         type="text" {if $ukrposhta->parcel_length}
-                  value="{$ukrposhta->parcel_length}"{/if}>
-                </li>
-              </ul>
-
-              <div id="ukrpost_detailed_info">
-                <a style="cursor: pointer; text-decoration: underline;">
-                  Дополнительная информация...</a>
-                <a style="cursor: pointer; text-decoration: underline; display: none;">
-                  Скрыть дополнительную информацию...</a>
-              </div>
-
-              <div id="ukrpost_detailed_info_body" style="display: none;">
-                <ul>
-
-                  <li><span class="recipient_info">При прибытии:</span></li>
-
-                  <li style="margin-top: 0;">
-                    <label for="ukrposhta_sms">Отправлять SMS получателю:</label>
-                    <input id="ukrposhta_sms" name="ukrposhta_sms" type="checkbox"
-                           {if $ukrposhta->sms}checked{/if}>
-                  </li>
-
-                  <li style="margin-bottom: 10px">
-                    <label for="ukrposhta_check_on_delivery">Разрешить проверку посылки:</label>
-                    <input id="ukrposhta_check_on_delivery" name="ukrposhta_check_on_delivery"
-                           type="checkbox"
-                           {if $ukrposhta->check_on_delivery}checked{/if}>
-                  </li>
-
-                  <li><span class="recipient_info">Тип оплаты:</span></li>
-
-                  <li style="margin-bottom: 5px;">
-                    <label for="ukrposhta_noncash_payment">Безналичный</label>
-                    <input name="ukrposhta_payment_type" id="ukrposhta_noncash_payment"
-                           class="simpla_inp" type="radio" value="noncash"
-                           {if $ukrposhta->payment_type == 'noncash'}checked{/if}/>
-                    <label for="ukrposhta_cash_payment">Наличный</label>
-                    <input name="ukrposhta_payment_type" id="ukrposhta_cash_payment"
-                           class="simpla_inp" type="radio" value="cash"
-                           {if $ukrposhta->payment_type == 'cash'}checked{/if}/>
-                  </li>
-
-                  <li><span class="recipient_info">Банк:</span></li>
-
-                  <li class="reci_d">
-                    <label for="ukrposhta_recipient_bank_code">Код банка:</label>
-                    <input disabled id="ukrposhta_recipient_bank_code"
-                           name="ukrposhta_recipient_bank_code"
-                           type="text" value="{$ukrposhta->recipient_bank_code}">
-                  </li>
-
-                  <li class="reci_d">
-                    <label for="ukrposhta_recipient_bank_account">Номер карты:</label>
-                    <input disabled id="ukrposhta_recipient_bank_account"
-                           name="ukrposhta_recipient_bank_account"
-                           type="text" value="{$ukrposhta->recipient_bank_account}">
-                  </li>
 
                 </ul>
               </div>

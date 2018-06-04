@@ -42,13 +42,11 @@ class UkrposhtaEnGenerator
      * @var array $recipientInfo
      */
     private $recipientInfo = [
-        'postcode'     => '',
-        'bank_code'    => '',
-        'bank_account' => '',
-        'first_name'   => '',
-        'last_name'    => '',
-        'phone'        => '',
-        'email'        => '',
+        'postcode'   => '',
+        'first_name' => '',
+        'last_name'  => '',
+        'phone'      => '',
+        'email'      => '',
     ];
 
     /**
@@ -184,11 +182,9 @@ class UkrposhtaEnGenerator
     {
         $recipient = [];
 
-        $recipient['first_name']   = $this->simpla->request->get('recipient_name', 'string');
-        $recipient['last_name']    = $this->simpla->request->get('recipient_sername', 'string');
-        $recipient['postcode']     = $this->simpla->request->get('recipient_postcode', 'string');
-        $recipient['bank_code']    = $this->simpla->request->get('recipient_bank_code', 'string');
-        $recipient['bank_account'] = $this->simpla->request->get('recipient_bank_account', 'string');
+        $recipient['first_name'] = $this->simpla->request->get('recipient_name', 'string');
+        $recipient['last_name']  = $this->simpla->request->get('recipient_sername', 'string');
+        $recipient['postcode']   = $this->simpla->request->get('recipient_postcode', 'string');
 
         $recipient['phone'] = $this->order->phone;
         $recipient['email'] = $this->order->email;
@@ -227,13 +223,14 @@ class UkrposhtaEnGenerator
 
         $shipment['paid_by_recipient'] = $this->simpla->request->get('paid_by', 'string') == 'recipient'
             ? true : false;
-        $shipment['non_cash_payment']  = $this->simpla->request->get('payment_type', 'string') == 'noncash'
-            ? true : false;
-        $shipment['sms']               = $this->simpla->request->get('sms') == 'true'
-            ? true : false;
-        $shipment['check_on_delivery'] = $this->simpla->request->get('check_on_delivery') == 'true'
-            ? true : false;
         $shipment['post_pay']          = $this->simpla->request->get('post_pay') == 'true'
+            ? true : false;
+
+        $shipment['non_cash_payment']  = $this->simpla->settings->ukrposhta_noncash_payment == '1'
+            ? true : false;
+        $shipment['sms']               = $this->simpla->settings->ukrposhta_sms == 'on'
+            ? true : false;
+        $shipment['check_on_delivery'] = $this->simpla->settings->ukrposhta_check_on_delivery == 'on'
             ? true : false;
 
         return $shipment;
@@ -246,15 +243,8 @@ class UkrposhtaEnGenerator
      */
     private function getParcelsInfo()
     {
-        $parcels['weight'] = empty($this->simpla->request->get('parcel_weight', 'string'))
-            ? $this->order->ukrposhta_parcel_weight
-            : $this->simpla->request->get('parcel_weight', 'string');
-
-        $parcels['length'] = empty($this->simpla->request->get('parcel_length'))
-            ? $this->order->ukrposhta_parcel_length
-            : $this->simpla->request->get('parcel_length');
-
-
+        $parcels['weight'] = $this->simpla->request->get('parcel_weight', 'string');
+        $parcels['length'] = $this->simpla->settings->ukrposhta_parcel_length;
         $parcels['declaredPrice'] = $this->order->total_price;
 
         return $parcels;
@@ -283,9 +273,7 @@ class UkrposhtaEnGenerator
 
         $recipient_client->setAddressId($addressId)
                          ->setEmail($this->recipientInfo['email'])
-                         ->setPhoneNumber($this->recipientInfo['phone'])
-                         ->setBankCode($this->recipientInfo['bank_code'])
-                         ->setBankAccount($this->recipientInfo['bank_account']);
+                         ->setPhoneNumber($this->recipientInfo['phone']);
 
         return $recipient_client;
     }
