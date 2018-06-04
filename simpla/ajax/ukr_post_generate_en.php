@@ -45,8 +45,8 @@ class UkrposhtaEnGenerator
         'postcode'     => '',
         'bank_code'    => '',
         'bank_account' => '',
-        'firstName'    => '',
-        'lastName'     => '',
+        'first_name'   => '',
+        'last_name'    => '',
         'phone'        => '',
         'email'        => '',
     ];
@@ -62,6 +62,8 @@ class UkrposhtaEnGenerator
      * @var array $shipmentInfo
      */
     private $shipmentInfo = [
+
+        'post_pay'          => '',
         'paid_by_recipient' => '',
         'non_cash_payment'  => '',
         'sms'               => '',
@@ -182,8 +184,8 @@ class UkrposhtaEnGenerator
     {
         $recipient = [];
 
-        $recipient['firstName']    = $this->simpla->request->get('recipient_name', 'string');
-        $recipient['lastName']     = $this->simpla->request->get('recipient_sername', 'string');
+        $recipient['first_name']   = $this->simpla->request->get('recipient_name', 'string');
+        $recipient['last_name']    = $this->simpla->request->get('recipient_sername', 'string');
         $recipient['postcode']     = $this->simpla->request->get('recipient_postcode', 'string');
         $recipient['bank_code']    = $this->simpla->request->get('recipient_bank_code', 'string');
         $recipient['bank_account'] = $this->simpla->request->get('recipient_bank_account', 'string');
@@ -227,8 +229,12 @@ class UkrposhtaEnGenerator
             ? true : false;
         $shipment['non_cash_payment']  = $this->simpla->request->get('payment_type', 'string') == 'noncash'
             ? true : false;
-        $shipment['sms']               = $this->simpla->request->get('sms', 'boolean');
-        $shipment['check_on_delivery'] = $this->simpla->request->get('check_on_delivery', 'boolean');
+        $shipment['sms']               = $this->simpla->request->get('sms') == 'true'
+            ? true : false;
+        $shipment['check_on_delivery'] = $this->simpla->request->get('check_on_delivery') == 'true'
+            ? true : false;
+        $shipment['post_pay']          = $this->simpla->request->get('post_pay') == 'true'
+            ? true : false;
 
         return $shipment;
     }
@@ -263,8 +269,8 @@ class UkrposhtaEnGenerator
     {
         $recipient_client = new Client();
 
-        $first_name = $this->recipientInfo['firstName'];
-        $last_name  = $this->recipientInfo['lastName'];
+        $first_name = $this->recipientInfo['first_name'];
+        $last_name  = $this->recipientInfo['last_name'];
 
         if ($first_name && $last_name) {
             $recipient_client->setFirstName($first_name)
@@ -330,21 +336,25 @@ class UkrposhtaEnGenerator
      */
     private function createShipmentEntity($senderUuid, $recipientUuid, $parcels, $deliveryType = 'W2W')
     {
-        return new Shipment([
-                                'sender'          => ['uuid' => $senderUuid],
-                                'recipient'       => ['uuid' => $recipientUuid],
-                                'deliveryType'    => $deliveryType,
-                                'paidByRecipient' => $this->shipmentInfo['paid_by_recipient'],
-                                'nonCashPayment'  => $this->shipmentInfo['non_cash_payment'],
-                                'sms'             => $this->shipmentInfo['sms'],
-                                'postPay'         => $parcels['declaredPrice'],
-                                'checkOnDelivery' => $this->shipmentInfo['check_on_delivery'],
-                                'parcels'         => [[
-                                    'weight'        => $parcels['weight'],
-                                    'length'        => $parcels['length'],
-                                    'declaredPrice' => $parcels['declaredPrice']],
-                                ],
-                            ]);
+        $shipment = new Shipment();
+        $shipment->setSender($senderUuid)
+                 ->setRecipient($recipientUuid)
+                 ->setDeliveryType($deliveryType)
+                 ->setPaidByRecipient($this->shipmentInfo['paid_by_recipient'])
+                 ->setNonCashPayment($this->shipmentInfo['non_cash_payment'])
+                 ->setSms($this->shipmentInfo['sms'])
+                 ->setCheckOnDelivery($this->shipmentInfo['check_on_delivery'])
+                 ->setParcels([[
+                     'weight'        => $parcels['weight'],
+                     'length'        => $parcels['length'],
+                     'declaredPrice' => $parcels['declaredPrice'],
+                 ]]);
+
+        if ($this->shipmentInfo['post_pay']) {
+            $shipment->setPostPay($parcels['declaredPrice']);
+        }
+
+        return $shipment;
     }
 }
 

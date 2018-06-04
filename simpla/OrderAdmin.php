@@ -44,6 +44,7 @@ class OrderAdmin extends Simpla
             $ukrposhta->payment_type           = $this->request->post('ukrposhta_payment_type');
             $ukrposhta->sms                    = $this->request->post('ukrposhta_sms') ? true : false;
             $ukrposhta->check_on_delivery      = $this->request->post('ukrposhta_check_on_delivery') ? true : false;
+            $ukrposhta->post_pay               = $this->request->post('ukrposhta_post_pay') ? true : false;
             /*ukrposhta*/
 
             if (!$order_labels = $this->request->post('order_labels')) {

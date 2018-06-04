@@ -528,7 +528,7 @@ class Shipment extends EntityBase
      */
     public function setSender($sender)
     {
-        $this->sender = $sender;
+        $this->sender = ['uuid' => $sender];
         return $this;
     }
 
@@ -547,7 +547,7 @@ class Shipment extends EntityBase
      */
     public function setRecipient($recipient)
     {
-        $this->recipient = $recipient;
+        $this->recipient = ['uuid' => $recipient];
         return $this;
     }
 

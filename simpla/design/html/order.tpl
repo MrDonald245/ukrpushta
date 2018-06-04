@@ -397,6 +397,12 @@
                          name="ukrposhta_recipient_sername"
                          type="text" {if $ukrposhta->recipient_sername} value="{$ukrposhta->recipient_sername}"{/if}></li>
 
+                <li style="margin-top: 0;">
+                  <label for="ukrposhta_post_pay">Наложенный платеж</label>
+                  <input id="ukrposhta_post_pay" name="ukrposhta_post_pay" type="checkbox"
+                         {if $ukrposhta->post_pay}checked{/if}>
+                </li>
+
                 <li style="margin-top: 15px"><span class="recipient_info">Посылка:</span></li>
 
                 <p>Оплачевает:</p>

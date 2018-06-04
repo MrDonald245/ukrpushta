@@ -34,7 +34,8 @@ $(function () {
                 paid_by:                $('[name=ukrposhta_paid_by]:checked').val(),
                 payment_type:           $('[name=ukrposhta_payment_type]:checked').val(),
                 sms:                    $('#ukrposhta_sms').is(':checked'),
-                check_on_delivery:      $('#ukrposhta_check_on_delivery').is(':checked')
+                check_on_delivery:      $('#ukrposhta_check_on_delivery').is(':checked'),
+                post_pay:               $('#ukrposhta_post_pay').is(':checked')
             },
             dataType: 'json',
             success:  function (data) {
