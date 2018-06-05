@@ -67,11 +67,14 @@ switch ($object)
     	if($simpla->managers->access('labels'))
         $result = $simpla->orders->update_label($id, $values);
         break;
+    case 'ukrposhta':
+        $result = $simpla->orders->delete_ukrposhta_shipment_file($values['order_id']);
+        break;
 }
 
 header("Content-type: application/json; charset=UTF-8");
 header("Cache-Control: must-revalidate");
 header("Pragma: no-cache");
-header("Expires: -1");		
+header("Expires: -1");
 $json = json_encode($result);
 print $json;

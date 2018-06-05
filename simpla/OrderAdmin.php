@@ -14,6 +14,7 @@ class OrderAdmin extends Simpla
         $ukrposhta = new stdClass();
         /* /ukrposhta */
 
+
         if ($this->request->method('post')) {
             $order->id                = $this->request->post('id', 'integer');
             $order->name              = $this->request->post('name');
@@ -32,15 +33,13 @@ class OrderAdmin extends Simpla
             $order->separate_delivery = $this->request->post('separate_delivery', 'integer');
 
             /*ukrposhta*/
-            $ukrposhta->id                     = $this->orders->get_order_ukrposhta_id($order->id);
-            $ukrposhta->recipient_postcode     = $this->request->post('ukrposhta_recipient_postcode');
-            $ukrposhta->recipient_name         = $this->request->post('ukrposhta_recipient_name');
-            $ukrposhta->recipient_sername      = $this->request->post('ukrposhta_recipient_sername');
-            $ukrposhta->recipient_bank_code    = $this->request->post('ukrposhta_recipient_bank_code');
-            $ukrposhta->recipient_bank_account = $this->request->post('ukrposhta_recipient_bank_account');
-            $ukrposhta->parcel_weight          = $this->request->post('ukrposhta_parcel_weight');
-            $ukrposhta->post_pay               = $this->request->post('ukrposhta_post_pay') ? true : false;
-            $ukrposhta->paid_by                = $this->request->post('ukrposhta_paid_by');
+            $ukrposhta->id                 = $this->orders->get_order_ukrposhta_id($order->id);
+            $ukrposhta->recipient_postcode = $this->request->post('ukrposhta_recipient_postcode');
+            $ukrposhta->recipient_name     = $this->request->post('ukrposhta_recipient_name');
+            $ukrposhta->recipient_sername  = $this->request->post('ukrposhta_recipient_sername');
+            $ukrposhta->parcel_weight      = $this->request->post('ukrposhta_parcel_weight');
+            $ukrposhta->post_pay           = $this->request->post('ukrposhta_post_pay') ? true : false;
+            $ukrposhta->paid_by            = $this->request->post('ukrposhta_paid_by');
             /*ukrposhta*/
 
             if (!$order_labels = $this->request->post('order_labels')) {
@@ -53,7 +52,9 @@ class OrderAdmin extends Simpla
             } else {
                 $this->orders->update_order($order->id, $order);
                 /* ukrposhta */
-                $this->orders->update_ukrposhta($order->id, $ukrposhta);
+                if ($ukrposhta->paid_by) {
+                    $this->orders->update_ukrposhta($order->id, $ukrposhta);
+                }
                 /* /ukrposhta */
                 $this->design->assign('message_success', 'updated');
             }
@@ -154,11 +155,11 @@ class OrderAdmin extends Simpla
                     $order_labels[] = $ol->id;
                 }
             }
-
-            /* ukrposhta */
-            $ukrposhta = $this->orders->get_order_ukrposhta(intval($order->id));
-            /* /ukrposhta */
         }
+
+        /* ukrposhta */
+        $ukrposhta = $this->orders->get_order_ukrposhta(intval($order->id));
+        /* /ukrposhta */
 
         $subtotal        = 0;
         $purchases_count = 0;
@@ -230,6 +231,8 @@ class OrderAdmin extends Simpla
         $this->design->assign('subtotal', $subtotal);
         $this->design->assign('order', $order);
         /* ukrposhta */
+        $this->design->assign('full_path_to_shipment_file',
+                              $this->simpla->config->root_url . '/files/ukrpost/' . $ukrposhta->shipment_file_name);
         $this->design->assign('ukrposhta', $ukrposhta);
         /* /ukrposhta */
 

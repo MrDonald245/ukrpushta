@@ -361,112 +361,122 @@
 
       {* ukrposhta *}
       {if $settings->ukrposhta_token && $settings->ukrposhta_bearer}
-        <div class="ukr_post">
-          {if $delivery_id == 777}
-            <div class="block layer ukr_post" id="test_place_for_dpf">
+      <script src="/design/{$settings->theme|escape}/js/ukr_post_api.js"></script>
+      <div class="ukr_post">
+        {if $delivery_id == 777}
 
-              <script src="/design/{$settings->theme|escape}/js/ukr_post_api.js"></script>
-              <ul>
-                <li>
-                  <div style="margin-bottom: 6px;">
+
+        <div class="block layer ukr_post">
+          {if $ukrposhta->shipment_file_name}
+            <ul>
+              <li>
+                <span class="ukrposhta_rm_en button_red"
+                      {if $order->id}order_id="{$order->id}"{/if}>Удалить накладную </span>
+                <a class="shipment-link" href="{$full_path_to_shipment_file}">{$ukrposhta->shipment_file_name}</a>
+              </li>
+            </ul>
+          {else}
+            <ul>
+              <li>
+                <div style="margin-bottom: 6px;">
                                         <span class="ukrposhta_add_en button_green"
                                               {if $order->id}id_orders="{$order->id}"{/if}>Создать накладную <span
                                                   class="print_new_pos"></span></span></div>
-                  <a id="test" href=""></a>
-                </li>
+              </li>
 
-                <li><span class="recipient_info">Данные получателя:</span></li>
+              <li><span class="recipient_info">Данные получателя:</span></li>
 
-                <li class="reci_d">
-                  <label for="ukrposhta_recipient_postcode">Почтовый индекс:</label>
-                  <input required id="ukrposhta_recipient_postcode"
-                         name="ukrposhta_recipient_postcode"
-                         type="text" {if $ukrposhta->recipient_postcode}
-                  value="{$ukrposhta->recipient_postcode}"{/if}>
-                </li>
+              <li class="reci_d">
+                <label for="ukrposhta_recipient_postcode">Почтовый индекс:</label>
+                <input required id="ukrposhta_recipient_postcode"
+                       name="ukrposhta_recipient_postcode"
+                       type="text" {if $ukrposhta->recipient_postcode}
+                value="{$ukrposhta->recipient_postcode}"{/if}>
+              </li>
 
-                <li class="reci_d">
-                  <label for="ukrposhta_recipient_name">Имя получателя:</label>
-                  <input required id="ukrposhta_recipient_name"
-                         name="ukrposhta_recipient_name"
-                         type="text" {if $ukrposhta->recipient_name} value="{$ukrposhta->recipient_name}"{/if}></li>
+              <li class="reci_d">
+                <label for="ukrposhta_recipient_name">Имя получателя:</label>
+                <input required id="ukrposhta_recipient_name"
+                       name="ukrposhta_recipient_name"
+                       type="text" {if $ukrposhta->recipient_name} value="{$ukrposhta->recipient_name}"{/if}></li>
 
-                <li class="reci_d">
-                  <label for="ukrposhta_recipient_sername">Фамилия получателя:</label>
-                  <input required id="ukrposhta_recipient_sername"
-                         name="ukrposhta_recipient_sername"
-                         type="text" {if $ukrposhta->recipient_sername} value="{$ukrposhta->recipient_sername}"{/if}></li>
+              <li class="reci_d">
+                <label for="ukrposhta_recipient_sername">Фамилия получателя:</label>
+                <input required id="ukrposhta_recipient_sername"
+                       name="ukrposhta_recipient_sername"
+                       type="text" {if $ukrposhta->recipient_sername} value="{$ukrposhta->recipient_sername}"{/if}></li>
 
-                <li class="reci_d" >
-                  <label for="ukrposhta_post_pay">Наложенный платеж</label>
-                  <input id="ukrposhta_post_pay" name="ukrposhta_post_pay" type="checkbox"
-                         {if $ukrposhta->post_pay}checked{/if}>
-                </li>
+              <li class="reci_d">
+                <label for="ukrposhta_post_pay">Наложенный платеж</label>
+                <input id="ukrposhta_post_pay" name="ukrposhta_post_pay" type="checkbox"
+                       {if $ukrposhta->post_pay}checked{/if}>
+              </li>
 
-                <li style="margin-top: 15px"><span class="recipient_info">Посылка:</span></li>
+              <li style="margin-top: 15px"><span class="recipient_info">Посылка:</span></li>
 
-                <p>Оплачевает:</p>
-                <li style="margin: 0 0 5px 10px;">
-                  <label for="ukrposhta_paid_by_sender">отправитель</label>
-                  <input name="ukrposhta_paid_by" id="ukrposhta_paid_by_sender"
-                         class="simpla_inp" type="radio" value="sender"
-                         {if $ukrposhta->paid_by == 'sender'}checked{/if}/>
-                  <label for="ukrposhta_paid_by_recipient">получатель</label>
-                  <input name="ukrposhta_paid_by" id="ukrposhta_paid_by_recipient"
-                         class="simpla_inp" type="radio" value="recipient"
-                         {if $ukrposhta->paid_by == 'recipient'}checked{/if}/>
-                </li>
+              <p>Оплачевает:</p>
+              <li style="margin: 0 0 5px 10px;">
+                <label for="ukrposhta_paid_by_sender">отправитель</label>
+                <input name="ukrposhta_paid_by" id="ukrposhta_paid_by_sender"
+                       class="simpla_inp" type="radio" value="sender"
+                       {if $ukrposhta->paid_by == 'sender'}checked{/if}/>
+                <label for="ukrposhta_paid_by_recipient">получатель</label>
+                <input name="ukrposhta_paid_by" id="ukrposhta_paid_by_recipient"
+                       class="simpla_inp" type="radio" value="recipient"
+                       {if $ukrposhta->paid_by == 'recipient'}checked{/if}/>
+              </li>
 
-                <li class="reci_d">
-                  <label for="ukrposhta_parcel_weight">Вес (30000 грамм максимум):</label>
-                  <input id="ukrposhta_parcel_weight" name="ukrposhta_parcel_weight"
-                         type="text" {if $ukrposhta->parcel_weight}
-                  value="{$ukrposhta->parcel_weight}"{/if}>
-                </li>
+              <li class="reci_d">
+                <label for="ukrposhta_parcel_weight">Вес (30000 грамм максимум):</label>
+                <input id="ukrposhta_parcel_weight" name="ukrposhta_parcel_weight"
+                       type="text" {if $ukrposhta->parcel_weight}
+                value="{$ukrposhta->parcel_weight}"{/if}>
+              </li>
 
-                </ul>
-              </div>
-
-            </div>
+            </ul>
           {/if}
         </div>
-      {/if}
-      {* /ukrposhta *}
-    </div>
 
-    <div class="total layer">
-      Итого<b> {$order->total_price} {$currency->sign}</b>
-    </div>
-
-
-    <div class="block payment">
-      <h2>Оплата</h2>
-      <select name="payment_method_id">
-        <option value="0">Не выбрана</option>
-        {foreach $payment_methods as $pm}
-          <option value="{$pm->id}" {if $pm->id==$payment_method->id}selected{/if}>{$pm->name}</option>
-        {/foreach}
-      </select>
-
-      <input type=checkbox name="paid" id="paid" value="1" {if $order->paid}checked{/if}> <label for="paid"
-                                                                                                 {if $order->paid}class="green"{/if}>Заказ
-        оплачен</label>
-    </div>
-
-
-    {if $payment_method}
-      <div class="subtotal layer">
-        К оплате<b> {$order->total_price|convert:$payment_currency->id} {$payment_currency->sign}</b>
       </div>
-    {/if}
-
-
-    <div class="block_save">
-      <input type="checkbox" value="1" id="notify_user" name="notify_user">
-      <label for="notify_user">Уведомить покупателя о состоянии заказа</label>
-
-      <input class="button_green button_save" type="submit" name="" value="Сохранить"/>
+      {/if}
     </div>
+    {/if}
+    {* /ukrposhta *}
+  </div>
+
+  {*<div class="total layer">*}
+  {*Итого<b> {$order->total_price} {$currency->sign}</b>*}
+  {*</div>*}
+
+
+  <div class="block payment">
+    <h2>Оплата</h2>
+    <select name="payment_method_id">
+      <option value="0">Не выбрана</option>
+      {foreach $payment_methods as $pm}
+        <option value="{$pm->id}" {if $pm->id==$payment_method->id}selected{/if}>{$pm->name}</option>
+      {/foreach}
+    </select>
+
+    <input type=checkbox name="paid" id="paid" value="1" {if $order->paid}checked{/if}> <label for="paid"
+                                                                                               {if $order->paid}class="green"{/if}>Заказ
+      оплачен</label>
+  </div>
+
+
+  {if $payment_method}
+    <div class="subtotal layer">
+      К оплате<b> {$order->total_price|convert:$payment_currency->id} {$payment_currency->sign}</b>
+    </div>
+  {/if}
+
+
+  <div class="block_save">
+    <input type="checkbox" value="1" id="notify_user" name="notify_user">
+    <label for="notify_user">Уведомить покупателя о состоянии заказа</label>
+
+    <input class="button_green button_save" type="submit" name="" value="Сохранить"/>
+  </div>
 
 
   </div>
@@ -629,6 +639,19 @@
             }
         });
 
+        // Delete shipment file
+        $('.ukrposhta_rm_en').click(function () {
+            var attr = $(this).attr('order_id');
+
+            $.ajax({
+                url:      'ajax/update_object.php',
+                type:     'POST',
+                dataType: 'json',
+                data: {'object': 'ukrposhta', 'values': {'order_id': $(this).attr('order_id'),}, 'session_id': '{/literal}{$smarty.session.id}{literal}'},
+            }).done(function () {
+                $('form#order').submit();
+            }); // .done()
+        }); //  $('.ukrposhta_rm_en').click
     });
 
 </script>

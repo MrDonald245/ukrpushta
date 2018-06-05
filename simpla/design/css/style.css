@@ -1502,3 +1502,7 @@ li.reci_d {
 form#order .delivery .reci_d input[type="text"]{
 	width: 116px;
 }
+
+.shipment-link {
+	margin-left: 10px;
+}

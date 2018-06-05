@@ -5,7 +5,7 @@ $(function () {
         } else {
             $('#block_ukr_post').hide(300);
         }
-    });
+    }); // $('[name=delivery_id]').change()
 
     // When Ukrpost print order button is pressed:
     $('.ukrposhta_add_en').click(function () {
@@ -39,14 +39,7 @@ $(function () {
                     $.fancybox({content: '<h2>' + data.error.message + '</h2>'});
                     console.error(data.error.message);
                 } else {
-                    var test = $("#test");
-                    test.attr('href', data.pdf);
-                    test.fancybox({
-                        width:  600,
-                        height: 300,
-                        type:   'iframe'
-                    });
-                    test.click();
+                    $('form#order').submit();
                 }
 
             },
@@ -55,18 +48,14 @@ $(function () {
                 console.error(errorThrown.message);
             }
         });
-    });
+    }); // $('.ukrposhta_add_en').click()
 
-    // When detailed info link is pressed:
-    var detailedInfoLinks = $("#ukrpost_detailed_info a").click(function () {
-        // Switch detailed info button:
-        detailedInfoLinks.not(":visible").show('slow');
-        $(this).hide();
-
-        // Switch visibility of detailed info body block:
-        var detailedInfoBlock = $("#ukrpost_detailed_info_body");
-        detailedInfoBlock.is(":visible")
-            ? detailedInfoBlock.hide('slow')
-            : detailedInfoBlock.show('slow');
-    });
+    $('a.shipment-link').click(function (event) {
+        event.preventDefault();
+        $(this).fancybox({
+            width:  600,
+            height: 300,
+            type:   'iframe'
+        });
+    }); // $('a.shipment-link').click()
 });

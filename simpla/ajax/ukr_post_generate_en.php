@@ -131,8 +131,10 @@ class UkrposhtaEnGenerator
 
             // If the older version of a shipment file is found,
             $ukrposhta = $this->simpla->orders->get_order_ukrposhta($this->order_id);
-            if ($this->isShipmentFileExist($ukrposhta->shipment_file_name)) {
-                $this->removeShipmentFile($ukrposhta->shipment_file_name); // delete the file.
+            if (!empty($ukrposhta->shipment_file_name)) {
+                if ($this->isShipmentFileExist($ukrposhta->shipment_file_name)) {
+                    $this->removeShipmentFile($ukrposhta->shipment_file_name); // delete the file.
+                }
             }
 
             // Create shipment file and save it to the database:
@@ -144,10 +146,8 @@ class UkrposhtaEnGenerator
                                 'error' => null,]);
 
         } catch (UkrposhtaApiException $exception) {
-            return json_encode(['error' => [
-                'message' => $exception->getMessage(),
-                'code'    => $exception->getCode(),
-            ],]);
+            return json_encode(['error' => ['message' => $exception->getMessage(),
+                                            'code'    => $exception->getCode(),],]);
         } catch
         (Exception $exc) {
             return json_encode([
@@ -183,7 +183,7 @@ class UkrposhtaEnGenerator
     private function isShipmentFileExist($filename)
     {
         $full_path = $this->simpla->config->root_dir . "$this->ukrposhtaFilesDir/$filename";
-        $res = file_exists($this->simpla->config->root_dir . "$this->ukrposhtaFilesDir/$filename");
+        $res       = file_exists($this->simpla->config->root_dir . "$this->ukrposhtaFilesDir/$filename");
         return $res;
     }
 
