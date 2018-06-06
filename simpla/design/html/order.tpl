@@ -122,10 +122,32 @@
           <div class="edit_order_detail" style='display:none;'>
             <textarea name="address">{$order->address|escape}</textarea>
           </div>
-          <div class="view_order_detail">
-            {$order->address|escape}
-          </div>
+          <div class="view_order_detail">{$order->address|escape}</div>
         </li>
+        {* ukrposhta *}
+        {if {$ukrposhta->post_office_address}}
+          <li>
+            <label class=property>Почтовый адресс доставки <a href='http://maps.yandex.ru/' id=address_link target=_blank><img
+                        align=absmiddle src='design/images/map.png' alt='Карта в новом окне'
+                        title='Карта в новом окне'></a></label>
+            <div class="edit_order_detail" style='display:none;'>
+              <textarea disabled name="ukrposhta_post_office_address">{$ukrposhta->post_office_address|escape}</textarea>
+            </div>
+            <div class="view_order_detail">{$ukrposhta->post_office_address|escape}</div>
+          </li>
+        {/if}
+        {if $ukrposhta->delivery_price}
+          <li>
+            <label class=property>Цена доставки</label>
+            <div class="edit_order_detail" style='display:none;'>
+              <textarea disabled name="ukrposhta_delivery_price">{$ukrposhta->delivery_price|escape}</textarea>
+            </div>
+            <div class="view_order_detail">
+              {$ukrposhta->delivery_price|escape} грн
+            </div>
+          </li>
+        {/if}
+        {* /ukrposhta *}
         <li>
           <label class=property>Комментарий пользователя</label>
           <div class="edit_order_detail" style='display:none;'>
@@ -233,7 +255,7 @@
 				</select>
 				</span>
               <span class=view_purchase>
-					{$purchase->variant_name} {if $purchase->sku}(арт. {$purchase->sku}){/if}			
+					{$purchase->variant_name} {if $purchase->sku}(арт. {$purchase->sku}){/if}
 				</span>
             </div>
 

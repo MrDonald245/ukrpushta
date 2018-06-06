@@ -24,9 +24,9 @@ class UkrposhtaEnGenerator
     private $simpla;
 
     /**
-     * @var int $order_id
+     * @var Orders $order
      */
-    private $order_id;
+    private $order;
 
     /**
      * @var string $ukrposhtaFilesDir
@@ -90,7 +90,8 @@ class UkrposhtaEnGenerator
     {
         $this->simpla = new Simpla();
 
-        $this->order_id      = $this->simpla->request->get('order_id', 'string');
+        $order_id            = $this->simpla->request->get('order_id', 'integer');
+        $this->order         = $this->simpla->orders->get_order($order_id);
         $this->senderInfo    = $this->getSenderInfo();
         $this->recipientInfo = $this->getRecipientInfo();
         $this->parcelsInfo   = $this->getParcelsInfo();
@@ -130,26 +131,39 @@ class UkrposhtaEnGenerator
             $pdf_contents = $this->wrapper->printForm()->shipmentSticker($shipment->getUuid());
 
             // If the older version of a shipment file is found,
-            $ukrposhta = $this->simpla->orders->get_order_ukrposhta($this->order_id);
+            $ukrposhta = $this->simpla->orders->get_order_ukrposhta($this->order->id);
             if (!empty($ukrposhta->shipment_file_name)) {
                 if ($this->isShipmentFileExist($ukrposhta->shipment_file_name)) {
                     $this->removeShipmentFile($ukrposhta->shipment_file_name); // delete the file.
                 }
             }
 
+            // Update additional info
+            $region             = $shipment->getDirection()['regionSortingCenter'];
+            $district           = $shipment->getDirection()['districtSortingCenter'];
+            $post_office_number = $shipment->getDirection()['postOfficeNumber'];
+
+            $ukrposhta->post_office_address = "$region $district $post_office_number";
+            $ukrposhta->delivery_price      = $shipment->getDeliveryPrice();
+            $this->simpla->orders->update_ukrposhta($this->order->id, $ukrposhta);
+
             // Create shipment file and save it to the database:
             $pdf_file = $this->createPdfFile($pdf_contents, $shipment->getUuid());
             $this->updateShipmentFilename($shipment->getUuid());
 
-            // Return created pdf without error.
-            return json_encode(['pdf'   => $pdf_file,
-                                'error' => null,]);
+
+            // Return created pdf, without error and with additional info.
+            return json_encode(['pdf'           => $pdf_file,
+                                'error'         => null,
+                                'detailed_info' => [
+                                    'direction'      => $shipment->getDirection(),
+                                    'delivery_price' => $shipment->getDeliveryPrice(),
+                                ]]);
 
         } catch (UkrposhtaApiException $exception) {
             return json_encode(['error' => ['message' => $exception->getMessage(),
                                             'code'    => $exception->getCode(),],]);
-        } catch
-        (Exception $exc) {
+        } catch (Exception $exc) {
             return json_encode([
                                    'error' => [
                                        'message' => $exc->getMessage(),
@@ -170,7 +184,7 @@ class UkrposhtaEnGenerator
     {
         $shipment                     = new stdClass();
         $shipment->shipment_file_name = "$shipmentUuid.pdf";
-        $this->simpla->orders->update_ukrposhta($this->order_id, $shipment);
+        $this->simpla->orders->update_ukrposhta($this->order->id, $shipment);
     }
 
     /**

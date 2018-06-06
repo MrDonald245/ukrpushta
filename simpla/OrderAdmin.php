@@ -33,13 +33,13 @@ class OrderAdmin extends Simpla
             $order->separate_delivery = $this->request->post('separate_delivery', 'integer');
 
             /*ukrposhta*/
-            $ukrposhta->id                 = $this->orders->get_order_ukrposhta_id($order->id);
-            $ukrposhta->recipient_postcode = $this->request->post('ukrposhta_recipient_postcode');
-            $ukrposhta->recipient_name     = $this->request->post('ukrposhta_recipient_name');
-            $ukrposhta->recipient_sername  = $this->request->post('ukrposhta_recipient_sername');
-            $ukrposhta->parcel_weight      = $this->request->post('ukrposhta_parcel_weight');
-            $ukrposhta->post_pay           = $this->request->post('ukrposhta_post_pay') ? true : false;
-            $ukrposhta->paid_by            = $this->request->post('ukrposhta_paid_by');
+            $ukrposhta->id                  = $this->orders->get_order_ukrposhta_id($order->id);
+            $ukrposhta->recipient_postcode  = $this->request->post('ukrposhta_recipient_postcode');
+            $ukrposhta->recipient_name      = $this->request->post('ukrposhta_recipient_name');
+            $ukrposhta->recipient_sername   = $this->request->post('ukrposhta_recipient_sername');
+            $ukrposhta->parcel_weight       = $this->request->post('ukrposhta_parcel_weight');
+            $ukrposhta->post_pay            = $this->request->post('ukrposhta_post_pay') ? true : false;
+            $ukrposhta->paid_by             = $this->request->post('ukrposhta_paid_by');
             /*ukrposhta*/
 
             if (!$order_labels = $this->request->post('order_labels')) {

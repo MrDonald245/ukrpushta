@@ -23,14 +23,14 @@ class Orders extends Simpla
         }
 
         $query = $this->db->placehold("SELECT  o.id, o.delivery_id, o.delivery_price, o.separate_delivery,
-										o.payment_method_id, o.paid, o.payment_date, o.closed, o.discount, o.coupon_code, o.coupon_discount,
+										o.payment_method_id, o.paid, o.payment_date, o.closed, o.discount, o.coupon_code, 
+										o.coupon_discount,
 										o.date, o.user_id, o.name, o.address, o.phone, o.email, o.comment, o.status,
 										o.url, o.total_price, o.note, o.ip,
 										/* ukrposhta */
-                                        u.recipient_postcode, u.recipient_inn,
-                                        u.recipient_name, u.recipient_sername,
-                                        u.recipient_bank_code, u.recipient_bank_account,
-                                        u.parcel_weight, u.post_pay, u.paid_by, u.shipment_file_name
+                                        u.recipient_postcode, u.recipient_name, u.recipient_sername,
+                                        u.parcel_weight, u.post_pay, u.paid_by, u.shipment_file_name,
+                                        u.post_office_address, u.delivery_price
                                         /* /ukrposhta */ 
 										FROM __orders o 
 										/* ukrposhta */
@@ -165,13 +165,14 @@ class Orders extends Simpla
             $query = $this->db->placehold("DELETE FROM __orders_labels WHERE order_id=?", $id);
             $this->db->query($query);
 
-            $query = $this->db->placehold("DELETE FROM __orders WHERE id=? LIMIT 1", $id);
-            $this->db->query($query);
-
             /* ukrposhta*/
+            $this->delete_ukrposhta_shipment_file(intval($id));
             $query = $this->db->placehold("DELETE FROM __ukrposhta_order WHERE order_id=?", $id);
             $this->db->query($query);
             /* /ukrposhta*/
+
+            $query = $this->db->placehold("DELETE FROM __orders WHERE id=? LIMIT 1", $id);
+            $this->db->query($query);
         }
     }
 
@@ -208,7 +209,8 @@ class Orders extends Simpla
                                           u.id, u.order_id,
                                           u.recipient_postcode, 
                                           u.recipient_name, u.recipient_sername,
-                                          u.parcel_weight, u.post_pay, u.paid_by, u.shipment_file_name
+                                          u.parcel_weight, u.post_pay, u.paid_by, u.shipment_file_name,
+                                          u.post_office_address, u.delivery_price
 					                   FROM __orders o LEFT JOIN __ukrposhta_order u ON o.id = u.order_id
 					                   $where
 					                   LIMIT 1
@@ -246,6 +248,8 @@ class Orders extends Simpla
 
     /**
      * Remove a generated shipment file both locally and form the database.
+     * Return false if it was impossible to remove a file form the file system.
+     * Also additional information about the shipment will be removed.
      *
      * @param int $order_id
      *
@@ -255,23 +259,25 @@ class Orders extends Simpla
     {
         $ukrposhta = $this->get_order_ukrposhta($order_id);
         $full_path = $this->config->root_dir . "files/ukrpost/$ukrposhta->shipment_file_name";
+        $result    = true;
 
-        $ukrposhta->shipment_file_name = '';
-        $this->update_ukrposhta($order_id, $ukrposhta);
-
-        if (!file_exists($full_path)) {
-            return false;
+        if (file_exists($full_path)) {
+            unlink($full_path);
+        } else {
+            $result = false;
         }
 
-        unlink($full_path);
+        $ukrposhta->shipment_file_name  = null;
+        $ukrposhta->post_office_address = null;
+        $ukrposhta->delivery_price      = null;
+        $this->update_ukrposhta($order_id, $ukrposhta);
 
-        return true;
+        return $result;
     }
 
     /**
      * Add a new ukrposhta entity to the database.
      *
-     * @param int      $order_id
      * @param stdClass $ukrposhta
      *
      * @return int ukrposhta id

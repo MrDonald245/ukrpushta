@@ -424,7 +424,7 @@ class Shipment extends EntityBase
     /**
      * Напрямок відправлення, містить id - ідентифікатор, name - назву та description - опис
      *
-     * @var string $direction
+     * @var array $direction
      */
     private $direction;
 
@@ -1509,7 +1509,7 @@ class Shipment extends EntityBase
     }
 
     /**
-     * @return string Напрямок відправлення, містить id - ідентифікатор, name - назву та description - опис
+     * @return array Напрямок відправлення, містить id - ідентифікатор, name - назву та description - опис
      */
     public function getDirection()
     {
@@ -1517,7 +1517,7 @@ class Shipment extends EntityBase
     }
 
     /**
-     * @param string $direction Напрямок відправлення,
+     * @param array $direction Напрямок відправлення,
      * містить id - ідентифікатор, name - назву та description - опис
      *
      * @return Shipment
