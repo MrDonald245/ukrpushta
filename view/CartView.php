@@ -80,21 +80,18 @@ class CartView extends View
                 $this->design->assign('error', 'captcha');
             } else {
                 // Добавляем заказ в базу
-                $order_id             = $this->orders->add_order($order);
-                $_SESSION['order_id'] = $order_id;
-
                 /* ukrposhta */
                 if ($dev_id == 777) {
                     $ukrposhta                     = new stdClass();
                     $ukrposhta->recipient_postcode = $this->request->post('ukrposhta_recipient_postcode');
-                    $ukrposhta->order_id           = $order_id;
                     $names                         = $this->parseName($order->name);
                     $ukrposhta->recipient_name     = $names['firstName'];
                     $ukrposhta->recipient_sername  = $names['lastName'];
-
-                    $this->orders->add_ukrposhta($ukrposhta);
                 }
                 /* /ukrposhta */
+
+                $order_id             = $this->orders->add_order($order, $ukrposhta);
+                $_SESSION['order_id'] = $order_id;
 
                 // Если использовали купон, увеличим количество его использований
                 if ($cart->coupon) {

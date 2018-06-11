@@ -148,11 +148,26 @@ class Orders extends Simpla
         return $this->db->result('count');
     }
 
-    public function update_order($id, $order)
+    /**
+     * @param int                 $id
+     * @param stdClass|array      $order
+     * @param null|stdClass|array $ukrposhta
+     *
+     * @return int
+     */
+    public function update_order($id, $order, $ukrposhta = null)
     {
         $query = $this->db->placehold("UPDATE __orders SET ?%, modified=now() WHERE id=? LIMIT 1", $order, intval($id));
         $this->db->query($query);
         $this->update_total_price(intval($id));
+
+        /* ukrposhta */
+        if ($order->delivery_id == 777 && !empty($ukrposhta)) {
+            is_array($ukrposhta) ? $ukrposhta['order_id'] = $id : $ukrposhta->order_id = $id;
+            $this->update_ukrposhta($id, $ukrposhta);
+        }
+        /* /ukrposhta */
+
         return $id;
     }
 
@@ -176,7 +191,13 @@ class Orders extends Simpla
         }
     }
 
-    public function add_order($order)
+    /**
+     * @param stdClass|array      $order
+     * @param null|stdClass|array $ukrposhta
+     *
+     * @return int
+     */
+    public function add_order($order, $ukrposhta = null)
     {
         $order         = (object)$order;
         $order->url    = md5(uniqid($this->config->salt, true));
@@ -187,6 +208,14 @@ class Orders extends Simpla
         $query = $this->db->placehold("INSERT INTO __orders SET ?%$set_curr_date", $order);
         $this->db->query($query);
         $id = $this->db->insert_id();
+
+        /* ukrposhta */
+        if ($order->delivery_id == 777 && !empty($ukrposhta)) {
+            is_array($ukrposhta) ? $ukrposhta['order_id'] = $id : $ukrposhta->order_id = $id;
+            $this->add_ukrposhta($ukrposhta);
+        }
+        /* /ukrposhta */
+
         return $id;
     }
 
@@ -203,7 +232,8 @@ class Orders extends Simpla
             return null;
         }
 
-        $where = $this->db->placehold('WHERE o.id = ?', $order_id);
+        $where = $this->db->placehold('WHERE o.id = ? AND u.id IS NOT NULL', $order_id);
+
 
         $query = $this->db->placehold("SELECT 
                                           u.id, u.order_id,
@@ -234,16 +264,20 @@ class Orders extends Simpla
     /**
      * Update ukrposhta_order table.
      *
-     * @param          $order_id
-     * @param stdClass $ukrposhta
+     * @param                $order_id
+     * @param stdClass|array $ukrposhta
      *
      * @return void
      */
     public function update_ukrposhta($order_id, $ukrposhta)
     {
-        $query = $this->db->placehold("UPDATE __ukrposhta_order SET ?% WHERE order_id = ?",
-                                      $ukrposhta, $order_id);
-        $this->db->query($query);
+        // Если такой записи нет, то создать запись:
+        if (empty($this->get_order_ukrposhta($order_id))) {
+            $this->add_ukrposhta($ukrposhta);
+        } else { // Обновить запись:
+            $query = $this->db->placehold("UPDATE __ukrposhta_order SET ?% WHERE order_id = ?", $ukrposhta, $order_id);
+            $this->db->query($query);
+        }
     }
 
     /**
@@ -278,7 +312,7 @@ class Orders extends Simpla
     /**
      * Add a new ukrposhta entity to the database.
      *
-     * @param stdClass $ukrposhta
+     * @param stdClass|array $ukrposhta
      *
      * @return int ukrposhta id
      */
